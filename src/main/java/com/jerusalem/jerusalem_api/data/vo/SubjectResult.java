@@ -1,10 +1,7 @@
 package com.jerusalem.jerusalem_api.data.vo;
 
-
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "subject_results")
 public class SubjectResult {
@@ -19,8 +16,49 @@ public class SubjectResult {
 
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject; // The subject
+    private Subject subject;
 
-    private Double score; // Score for the subject
-    private String grade; // Grade for the subject (e.g., A, B, C)
+    private Double score;
+    private String grade;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public AcademicRecords getAcademicRecords() {
+        return academicRecords;
+    }
+
+    public void setAcademicRecords(AcademicRecords academicRecords) {
+        this.academicRecords = academicRecords;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
 }

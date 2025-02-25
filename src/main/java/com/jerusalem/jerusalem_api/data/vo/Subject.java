@@ -1,10 +1,7 @@
 package com.jerusalem.jerusalem_api.data.vo;
 
-
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "subjects")
 public class Subject {
@@ -19,4 +16,29 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     private Class classId;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public Class getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Class classId) {
+        this.classId = classId;
+    }
 }
