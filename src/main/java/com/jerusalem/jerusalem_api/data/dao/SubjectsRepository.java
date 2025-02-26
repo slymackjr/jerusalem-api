@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface SubjectsRepository extends JpaRepository<Subject, Long> {
+public interface SubjectsRepository extends JpaRepository<Subject, Long>, RepositoryCustom {
 
 }

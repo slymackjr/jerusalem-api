@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AcademicRecordsRepository extends JpaRepository<AcademicRecords, Long> {
+public interface AcademicRecordsRepository extends JpaRepository<AcademicRecords, Long>, RepositoryCustom {
     // Custom query to find academic records by user ID
     @Query("SELECT ar FROM AcademicRecords ar WHERE ar.user.id = :userId")
     Optional<AcademicRecords> findByUserId(@Param("userId") Long userId);
