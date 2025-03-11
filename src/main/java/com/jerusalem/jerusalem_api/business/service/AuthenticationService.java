@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -41,6 +42,7 @@ public class AuthenticationService {
 
         try {
             User user = new User();
+            user.setUserId(UUID.randomUUID().toString()); // Generate unique UUID
             user.setName(input.getName());
             user.setEmail(input.getEmail());
             user.setRole(input.getRole());

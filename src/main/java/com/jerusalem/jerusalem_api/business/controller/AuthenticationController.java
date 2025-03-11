@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
@@ -32,23 +35,34 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody UserRequest registerUserDto) {
-        logger.info("Signup request received : {}", registerUserDto);
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserRequest registerUserDto) {
+        logger.info("Signup request received: {}", registerUserDto);
         try {
             User registeredUser = authenticationService.signup(registerUserDto);
             if (registeredUser == null) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to register user");
             }
-            return ResponseEntity.ok(registeredUser);
+
+            // Create a response map
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "User registered successfully");
+            response.put("userId", registeredUser.getUserId());
+            response.put("email", registeredUser.getEmail());
+            response.put("role", registeredUser.getRole());
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            logger.error("Signup failed for : {}. Error: {}", registerUserDto, e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Signup process failed", e);
+            logger.error("Signup failed for: {}. Error: {}", registerUserDto, e.getMessage(), e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> authenticate(@RequestBody UserRequest loginUserDto) {
-
+    public ResponseEntity<Map<String, Object>> authenticate(@RequestBody UserRequest loginUserDto) {
         logger.info("Login request received for email: {}", loginUserDto);
 
         try {
@@ -67,16 +81,26 @@ public class AuthenticationController {
                     authenticatedUser.getEmail(),
                     authenticatedUser.getRole(),
                     jwtToken,
-                    jwtService.getExpirationTime(), // Ensure this method exists
+                    jwtService.getExpirationTime(),
                     authenticatedUser.getCreatedAt(),
                     authenticatedUser.getUpdatedAt()
             );
 
-            return ResponseEntity.ok(userResponse);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Login successful");
+            response.put("token", userResponse.getToken());
+            response.put("role", userResponse.getRole());
+            response.put("user", userResponse); // Or extract specific fields
+
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             logger.error("Login failed for : {}. Error: {}", loginUserDto, e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Login process failed", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }
